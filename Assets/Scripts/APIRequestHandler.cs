@@ -8,7 +8,7 @@ public class APIRequestHandler : MonoBehaviour
 {
     private string apiKey = "NjVjNjA0MGY0Njc3MGQ1YzY2MTcyMmM2OjY1YzYwNDBmNDY3NzBkNWM2NjE3MjJiYw";
     private string jwtToken;
-    private bool authenticated = false;
+    private static bool authenticated = false;
 
     private string LOGIN_URL = "http://20.15.114.131:8080/api/login";
 
@@ -31,7 +31,15 @@ public class APIRequestHandler : MonoBehaviour
         
     }
 
-    IEnumerator Authenticate()
+    public static bool IsAuthenticated() {
+        return authenticated;
+    }
+
+    private static void SetAuthenticated(bool value) {
+        authenticated = value;
+    }
+
+    public IEnumerator Authenticate()
     {
         string body = String.Format("{{ \"apiKey\": \"{0}\"}}", apiKey);
         
@@ -45,7 +53,7 @@ public class APIRequestHandler : MonoBehaviour
                 JWTTokenResponse response = JsonUtility.FromJson<JWTTokenResponse>(www.downloadHandler.text);
                 Debug.Log("Successfully Authenticated: " + response.token);
                 jwtToken = response.token;
-                authenticated = true;
+                APIRequestHandler.SetAuthenticated(true);
             }
             else
             {
@@ -56,9 +64,9 @@ public class APIRequestHandler : MonoBehaviour
         StartCoroutine(GetRequest("http://20.15.114.131:8080/api/power-consumption/yearly/view?year=2023"));
     }
 
-    IEnumerator GetRequest(string uri)
+    public IEnumerator GetRequest(string uri)
     {
-        if (!authenticated) {
+        if (!APIRequestHandler.IsAuthenticated()) {
             Debug.Log("Not authenticated, unable to send GET request");
             yield break;
         }
