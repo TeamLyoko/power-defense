@@ -9,6 +9,7 @@ public class APIRequestHandler : MonoBehaviour
     private string apiKey = "NjVjNjA0MGY0Njc3MGQ1YzY2MTcyMmM2OjY1YzYwNDBmNDY3NzBkNWM2NjE3MjJiYw";
     private string jwtToken;
     private static bool authenticated = false;
+    private static APIRequestHandler instance;
 
     private string LOGIN_URL = "http://20.15.114.131:8080/api/login";
 
@@ -17,6 +18,19 @@ public class APIRequestHandler : MonoBehaviour
     public class JWTTokenResponse
     {
         public string token;
+    }
+
+    void Awake()
+    {   // Make sure that this script is accessible across all scenes
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     // Start is called before the first frame update
