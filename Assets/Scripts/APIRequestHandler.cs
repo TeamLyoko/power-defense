@@ -9,7 +9,7 @@ public class APIRequestHandler : MonoBehaviour
     private string apiKey = "NjVjNjA0MGY0Njc3MGQ1YzY2MTcyMmM2OjY1YzYwNDBmNDY3NzBkNWM2NjE3MjJiYw";
     private string jwtToken;
     private static bool authenticated = false;
-    private static APIRequestHandler instance;
+    public static APIRequestHandler instance;
 
     private string LOGIN_URL = "http://20.15.114.131:8080/api/login";
 
@@ -75,11 +75,9 @@ public class APIRequestHandler : MonoBehaviour
                 Debug.Log("Authentication Error: " + www.error);
             }
         }
-
-        StartCoroutine(GetRequest("http://20.15.114.131:8080/api/power-consumption/yearly/view?year=2023"));
     }
 
-    public IEnumerator GetRequest(string uri)
+    public IEnumerator GetRequest(string uri, System.Action<string> callback)
     {
         if (!APIRequestHandler.IsAuthenticated()) {
             Debug.Log("Not authenticated, unable to send GET request");
@@ -96,10 +94,37 @@ public class APIRequestHandler : MonoBehaviour
             if (www.result == UnityWebRequest.Result.Success)
             {
                 Debug.Log("Received: " + www.downloadHandler.text);
+                callback(www.downloadHandler.text);
             }
             else
             {
                 Debug.Log("GET Error: " + www.error);
+            }
+        }
+    }
+
+    public IEnumerator PutRequest(string uri, string jsonBody)
+    {
+        if (!APIRequestHandler.IsAuthenticated()) {
+            Debug.Log("Not authenticated, unable to send PUT request");
+            yield break;
+        }
+
+        using (UnityWebRequest www = UnityWebRequest.Put(uri, jsonBody))
+        {
+            www.SetRequestHeader("Accept", "*/*");
+            www.SetRequestHeader("Authorization", "Bearer " + jwtToken);
+            www.SetRequestHeader("Content-Type", "application/json");
+            // Send the request
+            yield return www.SendWebRequest();
+
+            if (www.result == UnityWebRequest.Result.Success)
+            {
+                Debug.Log("Received: " + www.downloadHandler.text);
+            }
+            else
+            {
+                Debug.Log("PUT Error: " + www.error);
             }
         }
     }
