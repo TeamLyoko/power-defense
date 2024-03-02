@@ -30,8 +30,8 @@ public class LoadingGameMenu : MonoBehaviour
         {
             // Load game scene
             yield return new WaitForSeconds(1);
-            SceneManager.LoadScene(2);
             Debug.Log("Game menu loads.");
+            SceneManager.LoadScene("GameMenu");
         }
         else
         {

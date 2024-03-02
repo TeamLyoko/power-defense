@@ -22,7 +22,7 @@ public class APIRequestHandler : MonoBehaviour
 
     void Awake()
     {   // Make sure that this script is accessible across all scenes
-        /*
+        
         if (instance == null)
         {
             instance = this;
@@ -31,7 +31,7 @@ public class APIRequestHandler : MonoBehaviour
         else
         {
             Destroy(gameObject);
-        }*/
+        }
     }
 
     // Start is called before the first frame update
