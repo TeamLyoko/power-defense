@@ -93,7 +93,7 @@ public class APIRequestHandler : MonoBehaviour
 
             if (www.result == UnityWebRequest.Result.Success)
             {
-                Debug.Log("Received: " + www.downloadHandler.text);
+                Debug.Log("GET Response: " + www.downloadHandler.text);
                 callback(www.downloadHandler.text);
             }
             else
@@ -120,7 +120,7 @@ public class APIRequestHandler : MonoBehaviour
 
             if (www.result == UnityWebRequest.Result.Success)
             {
-                Debug.Log("Received: " + www.downloadHandler.text);
+                Debug.Log("PUT Response: " + www.downloadHandler.text);
             }
             else
             {
